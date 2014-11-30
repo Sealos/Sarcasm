@@ -8,12 +8,13 @@ import urllib
 
 my_file = open('data01.csv', 'r')
 dataset = np.loadtxt(my_file, delimiter=",")
+my_file.close()
+
 #np.random.shuffle(dataset)
-
 target = dataset[:,0]
-data = dataset[:,1:6]
-
-C = 1.0  # SVM regularization parameter
+data = dataset[:,1:8]
+print data
+C = 1.0  # SVM regularization parameterd
 X = data
 y = target
 
@@ -23,35 +24,41 @@ svc = svm.SVC(kernel='linear', C=C).fit(X, y)
 rbf_svc = svm.SVC(kernel='rbf', gamma=0.7, C=C).fit(X, y)
 poly_svc = svm.SVC(kernel='poly', degree=2, C=C).fit(X, y)
 
+# title for the plots
+titles = ['SVM con kernel lineal',
+          'SVM con kernel RBF',
+          'SVM con kernel poligonal (grado 2)']
+
 for i, clf in enumerate((svc, rbf_svc, poly_svc)):
 	result = clf.predict(data)
 	print "#####################################"
-	
-	print "Result:\n %s" %(result)
-	
-	print "Target:\n %s" %(target)
+	print ""
+	print titles[i]
+	print ""
+	#print "Result:\n %s" %(result)
+	#print "Target:\n %s" %(target)
 
 	score = 0.0
 	j = 0
 	positivo = 0
+	falsos_positivos = 0
 	for sample in result:
+		if (target[j] == 0 and sample == 1):
+			falsos_positivos+=1
 		if(sample == target[j]):
 			score+=1.0
 			if (target[j] == 1):
-				positivo+=1.0
+				positivo+=1
 		j = j + 1
 	
-	print "Score: %s, Sample_set: %s, Positivos: %s" %(score, len(result), positivo)
-	
+	print "Score: %s, Sample_set: %s, " %(score, len(result))
 	print "Porcentaje acertadas: %s" %((float(score)/len(result)) * 100)
-	print "Porcentaje de falsos negativos: %s " %(100 - positivo)
-	print "Porcentaje de verdaderos negativos: %s" %(100 - (100- positivo))
-	print "#####################################"
-my_file.close()
-
-"""por que sarcasticos = 100
-falsos negativos = 100 - positivos
-verdaderos negativos = 100 - false pos"""
+	print "-------------------------------------"
+	print "Verdaderos positivos: %s " %(positivo)
+	print "Falsos positivos: %s" %(falsos_positivos)
+	print "Falsos negativos: %s " %(100 - positivo)
+	print "Verdaderos negativos: %s" %(100 - falsos_positivos)
+	print ""
 
 """
 # create a mesh to plot in
@@ -61,15 +68,7 @@ xx, yy = np.meshgrid(np.arange(x_min, x_max, h),
                      np.arange(y_min, y_max, h))
                      
 
-
-# title for the plots
-titles = ['SVC with linear kernel',
-          'LinearSVC (linear kernel)',
-          'SVC with RBF kernel',
-          'SVC with polynomial (degree 3) kernel']
-
-
-for i, clf in enumerate((svc, lin_svc, rbf_svc, poly_svc)):
+for i, clf in enumerate((svc, rbf_svc, poly_svc)):
     # Plot the decision boundary. For that, we will assign a color to each
     # point in the mesh [x_min, m_max]x[y_min, y_max].
     plt.subplot(2, 2, i + 1)
@@ -83,8 +82,8 @@ for i, clf in enumerate((svc, lin_svc, rbf_svc, poly_svc)):
 
     # Plot also the training points
     plt.scatter(X[:, 0], X[:, 1], c=y, cmap=plt.cm.Paired)
-    plt.xlabel(' X ')
-    plt.ylabel(' Y ')
+    plt.xlabel(' Mayusculas ')
+    plt.ylabel(' Uso de signos ')
     plt.xlim(xx.min(), xx.max())
     plt.ylim(yy.min(), yy.max())
     plt.xticks(())
