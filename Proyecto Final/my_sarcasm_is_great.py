@@ -11,10 +11,10 @@ dataset = np.loadtxt(my_file, delimiter=",")
 my_file.close()
 
 target = dataset[:,0]
-data = dataset[:,1:3]
+data = dataset[:,1:7]
 
 np.random.shuffle(dataset)
-X_train, X_test, y_train, y_test = data[50:],data[:50],target[50:],target[:50]
+X_train, X_test, y_train, y_test = data[100:],data[:100],target[100:],target[:100]
 
 print X_train
 C = 1.0  # SVM regularization parameterd
