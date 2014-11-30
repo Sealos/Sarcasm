@@ -1,6 +1,6 @@
 import numpy as np
 from sklearn import datasets, svm
-
+"""
 iris = datasets.load_iris()
 iris_X = iris.data
 iris_y = iris.target
@@ -17,8 +17,8 @@ iris_y_test  = iris_y[indices[-10:]]
 svc = svm.SVC(kernel='rbf')
 svc.fit(iris_X_train, iris_y_train) 
 print svc.predict(iris_X)
-
 """
+
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn import svm, datasets
@@ -28,6 +28,9 @@ iris = datasets.load_iris()
 # we create an instance of SVM and fit out data. We do not scale our
 # data since we want to plot the support vectors
 C = 1.0  # SVM regularization parameter
+
+print iris.data[1,1]
+
 X = iris.data[:, :2]  # we only take the first two features. We could
                       # avoid this ugly slicing by using a two-dim dataset
 y = iris.target
@@ -75,4 +78,4 @@ for i, clf in enumerate((svc, lin_svc, rbf_svc, poly_svc)):
     plt.title(titles[i])
 
 plt.show()
-"""
+

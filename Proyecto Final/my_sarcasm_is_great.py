@@ -1,29 +1,95 @@
 #!/usr/bin/env python
-
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn import datasets, svm
+from sklearn.datasets import load_svmlight_file
 import csv
-with open('data.csv', 'r') as my_file:
-	my_csv = csv.reader(my_file)
+import urllib
 
-	# En el data set el target esta en la columna 2 y el resto
-	# de los atributos en las columnas > 2
-	target = []
-	data = []
+my_file = open('data01.csv', 'r')
+dataset = np.loadtxt(my_file, delimiter=",")
+#np.random.shuffle(dataset)
 
-	# Saltamos el header
-	next(my_csv)
+target = dataset[:,0]
+data = dataset[:,1:6]
 
-	# Llenamos las tuplas de target (Valores esperados)
-	# y las de data (Valores que tenemos)
-	for row in my_csv:
-		target.append(row[1])
-		data.append(row[2:])
+C = 1.0  # SVM regularization parameter
+X = data
+y = target
 
-	# Transformamos la entrada a enteros
+h = .02  # step size in the mesh
 
-	for i in range(len(target)):
-		target[i] = int(target[i])
-		for j in range(len(data[i])):
-			data[i][j] = int(data[i][j])
-			
-print data
-print target
+svc = svm.SVC(kernel='linear', C=C).fit(X, y)
+rbf_svc = svm.SVC(kernel='rbf', gamma=0.7, C=C).fit(X, y)
+poly_svc = svm.SVC(kernel='poly', degree=2, C=C).fit(X, y)
+
+for i, clf in enumerate((svc, rbf_svc, poly_svc)):
+	result = clf.predict(data)
+	print "#####################################"
+	
+	print "Result:\n %s" %(result)
+	
+	print "Target:\n %s" %(target)
+
+	score = 0.0
+	j = 0
+	positivo = 0
+	for sample in result:
+		if(sample == target[j]):
+			score+=1.0
+			if (target[j] == 1):
+				positivo+=1.0
+		j = j + 1
+	
+	print "Score: %s, Sample_set: %s, Positivos: %s" %(score, len(result), positivo)
+	
+	print "Porcentaje acertadas: %s" %((float(score)/len(result)) * 100)
+	print "Porcentaje de falsos negativos: %s " %(100 - positivo)
+	print "Porcentaje de verdaderos negativos: %s" %(100 - (100- positivo))
+	print "#####################################"
+my_file.close()
+
+"""por que sarcasticos = 100
+falsos negativos = 100 - positivos
+verdaderos negativos = 100 - false pos"""
+
+"""
+# create a mesh to plot in
+x_min, x_max = X[:, 0].min() - 1, X[:, 0].max() + 1
+y_min, y_max = X[:, 1].min() - 1, X[:, 1].max() + 1
+xx, yy = np.meshgrid(np.arange(x_min, x_max, h),
+                     np.arange(y_min, y_max, h))
+                     
+
+
+# title for the plots
+titles = ['SVC with linear kernel',
+          'LinearSVC (linear kernel)',
+          'SVC with RBF kernel',
+          'SVC with polynomial (degree 3) kernel']
+
+
+for i, clf in enumerate((svc, lin_svc, rbf_svc, poly_svc)):
+    # Plot the decision boundary. For that, we will assign a color to each
+    # point in the mesh [x_min, m_max]x[y_min, y_max].
+    plt.subplot(2, 2, i + 1)
+    plt.subplots_adjust(wspace=0.4, hspace=0.4)
+
+    Z = clf.predict(np.c_[xx.ravel(), yy.ravel()])
+
+    # Put the result into a color plot
+    Z = Z.reshape(xx.shape)
+    plt.contourf(xx, yy, Z, cmap=plt.cm.Paired, alpha=0.8)
+
+    # Plot also the training points
+    plt.scatter(X[:, 0], X[:, 1], c=y, cmap=plt.cm.Paired)
+    plt.xlabel(' X ')
+    plt.ylabel(' Y ')
+    plt.xlim(xx.min(), xx.max())
+    plt.ylim(yy.min(), yy.max())
+    plt.xticks(())
+    plt.yticks(())
+    plt.title(titles[i])
+
+plt.show()
+"""
