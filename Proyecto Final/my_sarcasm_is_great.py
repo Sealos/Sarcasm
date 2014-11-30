@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn import datasets, svm
+from sklearn import datasets, svm, cross_validation
 from sklearn.datasets import load_svmlight_file
 import csv
 import urllib
@@ -10,13 +10,16 @@ my_file = open('data01.csv', 'r')
 dataset = np.loadtxt(my_file, delimiter=",")
 my_file.close()
 
-#np.random.shuffle(dataset)
 target = dataset[:,0]
-data = dataset[:,1:8]
-print data
+data = dataset[:,1:3]
+
+np.random.shuffle(dataset)
+X_train, X_test, y_train, y_test = data[50:],data[:50],target[50:],target[:50]
+
+print X_train
 C = 1.0  # SVM regularization parameterd
-X = data
-y = target
+X = X_train
+y = y_train
 
 h = .02  # step size in the mesh
 
@@ -30,24 +33,24 @@ titles = ['SVM con kernel lineal',
           'SVM con kernel poligonal (grado 2)']
 
 for i, clf in enumerate((svc, rbf_svc, poly_svc)):
-	result = clf.predict(data)
+	result = clf.predict(X_test)
 	print "#####################################"
 	print ""
 	print titles[i]
 	print ""
 	#print "Result:\n %s" %(result)
-	#print "Target:\n %s" %(target)
+	#print "Target:\n %s" %(y_test)
 
 	score = 0.0
 	j = 0
 	positivo = 0
 	falsos_positivos = 0
 	for sample in result:
-		if (target[j] == 0 and sample == 1):
+		if (y_test[j] == 0 and sample == 1):
 			falsos_positivos+=1
-		if(sample == target[j]):
+		if(sample == y_test[j]):
 			score+=1.0
-			if (target[j] == 1):
+			if (y_test[j] == 1):
 				positivo+=1
 		j = j + 1
 	
