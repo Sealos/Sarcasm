@@ -24,3 +24,6 @@ with open('data.csv', 'r') as my_file:
 		target[i] = int(target[i])
 		for j in range(len(data[i])):
 			data[i][j] = int(data[i][j])
+			
+print data
+print target
