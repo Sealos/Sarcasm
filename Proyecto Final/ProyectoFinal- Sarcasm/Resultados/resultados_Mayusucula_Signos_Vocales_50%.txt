@@ -1,0 +1,35 @@
+#####################################
+
+SVM con kernel lineal
+
+Score: 76.0, Sample_set: 100, 
+Porcentaje acertadas: 76.0
+-------------------------------------
+Verdaderos positivos: 33 
+Falsos positivos: 9
+Falsos negativos: 67 
+Verdaderos negativos: 91
+
+#####################################
+
+SVM con kernel RBF
+
+Score: 76.0, Sample_set: 100, 
+Porcentaje acertadas: 76.0
+-------------------------------------
+Verdaderos positivos: 33 
+Falsos positivos: 9
+Falsos negativos: 67 
+Verdaderos negativos: 91
+
+#####################################
+
+SVM con kernel poligonal (grado 2)
+
+Score: 64.0, Sample_set: 100, 
+Porcentaje acertadas: 64.0
+-------------------------------------
+Verdaderos positivos: 13 
+Falsos positivos: 1
+Falsos negativos: 87 
+Verdaderos negativos: 99
